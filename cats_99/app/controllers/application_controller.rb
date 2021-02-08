@@ -25,4 +25,9 @@ class ApplicationController < ActionController::Base
     redirect_to users_url if logged_in?
   end
 
+  def owner? 
+    @cat.owner == current_user
+    #not totally sure 
+  end
+
 end
