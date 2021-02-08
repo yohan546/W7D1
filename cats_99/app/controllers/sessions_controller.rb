@@ -22,8 +22,14 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    
-  end
+    current_user.reset_session_token! 
+    session[:session_token] = nil 
+    #unsure of syntax, was not covered in demo 
+    #is a conditional required? 
+  end 
+
+
+
 
   private
 
