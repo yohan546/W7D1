@@ -1,9 +1,7 @@
 class SessionsController < ApplicationController
-
-  def index
-    @users = User.all
-    render :index
-  end
+  
+  before_action :require_logged_out, only: [:new, :create]
+  before_action :require_logged_in, only: [:destroy]
 
   def new
     @user = User.new
@@ -11,30 +9,28 @@ class SessionsController < ApplicationController
   end
 
   def create
-    user = User.new(user_params)
+    @user = User.find_by_credentials(
+      params[:user][:username], params[:user][:password]
+    )
 
-    if user.save
-      login!(user)
-      redirect_to user_url(user)
+    if @user
+      login!(@user)
+      redirect_to user_url(@user)
     else
-      render json: user.errors.full_messages, status: 422
+      @user = User.new
+      render :new
     end
   end
 
   def destroy
-    current_user.reset_session_token! 
-    session[:session_token] = nil 
-    #unsure of syntax, was not covered in demo 
-    #is a conditional required? 
+    logout!
+    redirect_to new_session_url
   end 
 
+  # private
 
-
-
-  private
-
-  def user_params
-    params.require(:user).permit(:username, :password)
-  end
+  # def user_params
+  #   params.require(:user).permit(:username, :password)
+  # end
 
 end

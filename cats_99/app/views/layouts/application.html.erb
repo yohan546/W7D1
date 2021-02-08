@@ -8,9 +8,25 @@
     <%= javascript_include_tag 'application' %>
   </head>
 
-  h1
 
   <body>
+
+  <% if logged_in? %>
+    <h2>Welcome <%= current_user.username %>!</h2>
+      <form action="<%= session_url %>" method="POST">
+      
+        <input type="hidden" name="_method" value="DELETE">
+
+        <button>Log Out 5000</button>
+
+      </form>
+  <% else %>
+
+    <a href="<%= new_session_url %>">Log On In</a>
+    <a href="<%= new_user_url %>">Sign It On Up, Babyyy!</a>
+
+  <% end %>
+
     <%= yield %>
   </body>
 </html>
